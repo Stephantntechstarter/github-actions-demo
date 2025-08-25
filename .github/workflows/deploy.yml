@@ -17,10 +17,14 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd test
+          npm install
 
       - name: Run tests
-        run: npm test
+        run: |
+          cd test
+          npm test
 
   deploy:
     runs-on: ubuntu-latest
