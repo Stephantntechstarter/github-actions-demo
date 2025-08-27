@@ -90,11 +90,11 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/private_key.pem
           chmod 600 ~/.ssh/private_key.pem
-          ssh-keyscan ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Copy file to EC2
         run: |
-          scp -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=no test/mehrwertsteuer.js ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/
+          scp -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=no test/mehrwertsteuer.js ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/
 
       - name: Notify deploy success
         uses: slackapi/slack-github-action@v2.1.1
