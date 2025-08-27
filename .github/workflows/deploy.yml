@@ -10,13 +10,13 @@ jobs:
     steps:
       - name: Notify workflow start
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "🚀 Pipeline für ${{ github.repository }} wurde gestartet (Commit: ${{ github.sha }})"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   test:
     runs-on: ubuntu-latest
@@ -48,24 +48,24 @@ jobs:
       - name: Notify test success
         if: success()
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "✅ Tests erfolgreich für ${{ github.repository }} (Commit: ${{ github.sha }})"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify test failure
         if: failure()
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "❌ Tests fehlgeschlagen für ${{ github.repository }} (Commit: ${{ github.sha }})"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -74,13 +74,13 @@ jobs:
     steps:
       - name: Notify deploy start
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "📦 Starte Deployment für ${{ github.repository }}"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Checkout code
         uses: actions/checkout@v5
@@ -98,13 +98,13 @@ jobs:
 
       - name: Notify deploy success
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "✅ Deployment erfolgreich für ${{ github.repository }} (Commit: ${{ github.sha }})"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   notify-final:
     runs-on: ubuntu-latest
@@ -113,10 +113,10 @@ jobs:
     steps:
       - name: Notify final status
         uses: slackapi/slack-github-action@v2.1.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
           payload: |
             {
               "text": "🏁 Pipeline für ${{ github.repository }} abgeschlossen mit Status: ${{ job.status }} (Commit: ${{ github.sha }})"
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
