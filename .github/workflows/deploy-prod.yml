@@ -1,0 +1,30 @@
+name: Deployment auf den Produktions-EC2 Maschinen des LBs
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: checkout
+              uses: actions/checkout@v5
+
+            - name: ssh setup
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
+                chmod 400 ~/.ssh/meinPrivateKey
+                for ip in ${{secrets.EC2_IPS}}; do
+                ssh-keyscan -H $ip  >> ~/.ssh/known_hosts
+                done
+
+            - name: index.html für nginx bereitstellen
+              run: |
+                for ip in ${{secrets.EC2_IPS}}; do
+                scp -i ~/.ssh/meinPrivateKey index.html ubuntu@$ip:/home/ubuntu/index.html
+                ssh -i ~/.ssh/meinPrivateKey ubuntu@$ip "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+                done

@@ -1,0 +1,23 @@
+name: Deployment auf die Testing EC2 Maschine
+
+on: push
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: checkout
+              uses: actions/checkout@v5
+
+            - name: ssh setup
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
+                chmod 400 ~/.ssh/meinPrivateKey
+                ssh-keyscan -H ${{secrets.EC2_TESTING_IP}}  >> ~/.ssh/known_hosts
+
+            - name: index.html für nginx bereitstellen
+              run: |
+                scp -i ~/.ssh/meinPrivateKey index.html ubuntu@${{secrets.EC2_TESTING_IP}}:/home/ubuntu/index.html
+                ssh -i ~/.ssh/meinPrivateKey ubuntu@${{secrets.EC2_TESTING_IP}} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
