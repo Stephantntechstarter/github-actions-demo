@@ -16,7 +16,7 @@ jobs:
             - name: ssh setup
               run: |
                 mkdir -p ~/.ssh
-                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/meinPrivateKey
+                echo "${{secrets.EC2_SSH_KEY}}" > ~/.ssh/meinPrivateKey
                 chmod 400 ~/.ssh/meinPrivateKey
                 for ip in ${{secrets.EC2_IPS}}; do
                 ssh-keyscan -H $ip  >> ~/.ssh/known_hosts
